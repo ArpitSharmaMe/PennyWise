@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise - Savings Goal</title>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .goal-info {
+            margin-bottom: 30px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>💰 PennyWise</h1>
+            <div class="subtitle">Savings Goal Tracker</div>
+            
+            {% if goal_amount > 0 %}
+            <div class="goal-info">
+                <div class="info-item">
+                    <span>🎯 Goal Amount:</span>
+                    <strong>₹{{ "%.2f"|format(goal_amount) }}</strong>
+                </div>
+                <div class="info-item">
+                    <span>💰 Current Balance:</span>
+                    <strong>₹{{ "%.2f"|format(balance) }}</strong>
+                </div>
+                <div class="info-item">
+                    <span>📊 Progress:</span>
+                    <strong>{{ "%.1f"|format(progress) }}%</strong>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress }}%">
+                        {% if progress > 15 %}{{ "%.0f"|format(progress) }}%{% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            {% if balance >= goal_amount %}
+            <div class="success-message">
+                🎉 Congratulations! You've reached your savings goal! 🎉
+            </div>
+            {% else %}
+            <div class="info-item">
+                <span>💪 Amount Needed:</span>
+                <strong>₹{{ "%.2f"|format(goal_amount - balance) }}</strong>
+            </div>
+            {% endif %}
+            {% endif %}
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="goal_amount">Set/Update Savings Goal (₹)</label>
+                    <input type="number" id="goal_amount" name="goal_amount" step="100" required 
+                           placeholder="Enter your savings goal in rupees" value="{{ goal_amount if goal_amount > 0 else '' }}">
+                </div>
+                <button type="submit">Set Goal</button>
+            </form>
+            <a href="/" class="back-link">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
